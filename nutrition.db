@@ -1,0 +1,31 @@
+import sqlite3
+
+def create_database():
+    conn = sqlite3.connect('nutrition.db')  # Creates a new database file (or connects if it already exists)
+    cursor = conn.cursor()
+
+    # Create table (if it doesn't exist)
+    cursor.execute('''CREATE TABLE IF NOT EXISTS nutrition (
+                        fruit_name TEXT PRIMARY KEY,
+                        calories INTEGER,
+                        protein REAL,
+                        vitamins TEXT
+                    )''')
+
+    # Insert some sample data into the table
+    sample_data = [
+        ('banana', 105, 1.3, 'Vitamin C, Vitamin B6'),
+        ('apple', 52, 0.3, 'Vitamin C'),
+        ('orange', 62, 1.2, 'Vitamin C'),
+        ('carrot', 41, 0.9, 'Vitamin A, Vitamin K'),
+        ('tomato', 18, 0.9, 'Vitamin C, Vitamin K')
+    ]
+
+    cursor.executemany('''INSERT OR REPLACE INTO nutrition (fruit_name, calories, protein, vitamins)
+                          VALUES (?, ?, ?, ?)''', sample_data)
+
+    conn.commit()
+    conn.close()
+
+# Run the function to create and populate the database
+create_database()
